@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+    <canvas id="myCanvas" width="1000" height="1000"
+            style="border:1px solid #000000;">
+    </canvas>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var fps = 60;
+
+        var ballImg = new Image();
+        ballImg.src="ball.png";
+
+        var ball = {
+            oldx: 500,
+            oldy: 200,
+            x: 500,
+            y: 200,
+            dx: 0,
+            dy: 0,
+            r:50
+        };
+        var ground = {
+            y: 900,
+            length: 1000,
+            depth: 100
+        };
+        ground.draw = function () {
+            ctx.fillStyle = "green";
+            ctx.fillRect(0, this.y, this.length, this.depth);
+        };
+
+        ball.draw = function () {
+            ctx.drawImage(ballImg, this.x, this.y);
+        };
+
+        var g = 9*0.1;
+        ball.move = function () {
+            if (this.y + this.dy + ballImg.height >= ground.y) {
+                this.y = Math.min(this.oldy, ground.y);
+                this.dy = -this.dy;
+            } else {
+                this.oldy = this.y;
+                this.dy += g;
+                this.y = this.oldy + this.dy;
+            }
+        };
+
+        setInterval(function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ground.draw();
+            ball.move();
+            ball.draw();
+
+        }, 1000 / fps);
+
+
+    </script>
+</body>
+</html>
